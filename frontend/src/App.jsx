@@ -26,7 +26,7 @@ function App() {
 
   return (
     <div className="bg-gradient-to-r from-blue-600 to-violet-600 pb-2 md:h-screen ">
-      {/* <Login /> */}
+     
       <Navbar />
       <Routes>
         <Route

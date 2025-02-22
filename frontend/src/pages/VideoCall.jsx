@@ -63,8 +63,8 @@ function VideoCall() {
   };
 
   return (
-    <>
-      <div className="pt-16 flex justify-center md:gap-5 gap-2 items-center ">
+    <div className={` ${match === null ? "h-[99.1vh] " : ""} `}>
+      <div className="pt-16 flex justify-center md:gap-5 gap-2 items-center">
         <button
           className="px-5 py-2 rounded-2xl bg-gradient-to-r from-emerald-400 to-cyan-400 hover:from-emerald-700 hover:to-cyan-700"
           onClick={startCall}
@@ -88,7 +88,7 @@ function VideoCall() {
           </div>
         )}
       </div>
-    </>
+    </div>
   );
 }
 

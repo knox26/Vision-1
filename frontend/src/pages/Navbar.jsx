@@ -10,7 +10,7 @@ function Navbar() {
       className="bg-gradient-to-r from-blue-600 to-violet-600 fixed w-full top-0 z-40 
   backdrop-blur-lg bg-base-100/80"
     >
-      <div className=" mx-auto px-4 h-16 ">
+      <div className=" mx-auto px-4 max-h-16 ">
         <div className=" mx-2 flex justify-between items-center h-full">
           <div className="flex items-center gap-8">
             {/* <Link
