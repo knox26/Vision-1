@@ -16,7 +16,7 @@ function App() {
     checkAuth();
   }, [checkAuth]);
 
-  if ( !authUser) {
+  if (!isCheckingAuth && !authUser) {
     return (
       <div className="flex justify-center items-center h-screen">
         <span className=" text-info h-20 w-20"> Loading ... </span>
@@ -26,14 +26,13 @@ function App() {
 
   return (
     <div className="bg-gradient-to-r from-blue-600 to-violet-600 pb-2 md:h-screen ">
-     
       <Navbar />
       <Routes>
         <Route
           path="/"
           element={authUser ? <HomePage /> : <Navigate to="/login" />}
         />
-          <Route
+        <Route
           path="/videocall"
           element={authUser ? <VideoCall /> : <Navigate to="/login" />}
         />
