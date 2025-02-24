@@ -16,7 +16,7 @@ function App() {
     checkAuth();
   }, [checkAuth]);
 
-  if (isCheckingAuth && !authUser) {
+  if ( !authUser) {
     return (
       <div className="flex justify-center items-center h-screen">
         <span className=" text-info h-20 w-20"> Loading ... </span>

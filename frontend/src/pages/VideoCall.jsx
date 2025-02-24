@@ -41,7 +41,7 @@ function VideoCall() {
 
   useEffect(() => {
     navigator.mediaDevices
-      .getUserMedia({ video: true, audio: true })
+      .getUserMedia({ video: { codec: "VP9" }, audio: true }) // Changed: Explicitly request VP9 codec
       .then((stream) => {
         setMyStream(stream);
       })
@@ -109,10 +109,19 @@ function VideoFrame({ peer, match, myStream }) {
     }
   }, [myStream]);
 
+  // Changed: Function to prioritize VP9 in SDP
+  const setCodecPreference = (sdp) => {
+    return sdp.replace(
+      /m=video.*\r\n/g,
+      (match) => match + "a=rtpmap:98 VP9/90000\r\n"
+    );
+  };
+
   useEffect(() => {
     if (peer && match && myStream) {
       console.log("Connecting to peer:", match);
       const call = peer.call(match, myStream);
+
       if (call) {
         call.on("stream", (remoteStream) => {
           if (remoteVideoRef.current) {
@@ -124,7 +133,18 @@ function VideoFrame({ peer, match, myStream }) {
             };
           }
         });
+
+        // Changed: Modify SDP to use VP9
+        call.on("sdp", (sdp) => {
+          call.peerConnection.setRemoteDescription(
+            new RTCSessionDescription({
+              type: "offer",
+              sdp: setCodecPreference(sdp),
+            })
+          );
+        });
       }
+
       peer.on("call", (incomingCall) => {
         incomingCall.answer(myStream);
 
@@ -138,6 +158,16 @@ function VideoFrame({ peer, match, myStream }) {
             };
           }
         });
+
+        // Changed: Modify SDP for incoming call to use VP9
+        incomingCall.on("sdp", (sdp) => {
+          incomingCall.peerConnection.setRemoteDescription(
+            new RTCSessionDescription({
+              type: "answer",
+              sdp: setCodecPreference(sdp),
+            })
+          );
+        });
       });
     }
   }, [peer, match, myStream]);
@@ -145,22 +175,22 @@ function VideoFrame({ peer, match, myStream }) {
   return (
     <div className="lg:w-[40vw] rounded-xl">
       <div className="video-container flex flex-col justify-between items-center md:gap-4 gap-2 m-2 mt-2.5 rounded-xl">
-        <div className="p-1 rounded-3xl bg-gray-900  ">
+        <div className="p-1 rounded-3xl bg-gray-900">
           <video
             ref={currentUserVideoRef}
             muted
             autoPlay
             playsInline
-            className=" h-[35vh] aspect-[16/9] rounded-3xl "
+            className="h-[35vh] aspect-[16/9] rounded-3xl"
           />
         </div>
         {match && (
-          <div className="p-1 rounded-3xl bg-gray-900  ">
+          <div className="p-1 rounded-3xl bg-gray-900">
             <video
               ref={remoteVideoRef}
               autoPlay
               playsInline
-              className=" h-[35vh] aspect-[16/9] rounded-3xl "
+              className="h-[35vh] aspect-[16/9] rounded-3xl"
             />
           </div>
         )}
