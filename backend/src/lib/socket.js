@@ -69,8 +69,9 @@ io.on("connection", (socket) => {
     } else {
       if (!waitingUsers.includes(id)) {
         waitingUsers.push(id);
+        console.log("user added to waiting list", id);
       }
-      console.log("user added to waiting list", id);
+      
     }
   });
   
