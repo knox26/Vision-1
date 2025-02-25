@@ -7,30 +7,19 @@ const BASE_URL =
 const useIntrestStore = create((set) => ({
   audioURL: null,
   setAudioURL: (url) => set({ audioURL: url }),
-
   sendAudioToBackend: async (audioBlob) => {
     try {
-      // Convert Blob to Base64
-      const convertBlobToBase64 = (blob) => {
-        return new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.readAsDataURL(blob);
-          reader.onloadend = () => resolve(reader.result.split(",")[1]); // Extract base64 part
-          reader.onerror = reject;
-        });
-      };
+      const formData = new FormData();
+      formData.append("audio", audioBlob, "recording.webm");
 
-      const base64Audio = await convertBlobToBase64(audioBlob);
-
-      // Send Base64 encoded audio to backend
       const response = await axios.post(
-        `${BASE_URL}/api/upload/upload-audio`,
-        { audio: base64Audio },
+        `${BASE_URL}api/upload/upload-audio`, // Corrected API endpoint
+        formData,
         {
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "multipart/form-data",
           },
-          withCredentials: true,
+          withCredentials: true, // Ensure credentials are sent with the request
         }
       );
 
