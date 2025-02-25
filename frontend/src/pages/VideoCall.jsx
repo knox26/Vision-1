@@ -14,7 +14,12 @@ function VideoCall() {
 
   useEffect(() => {
     if (authUser) {
-      const newPeer = new Peer(authUser._id);
+      const newPeer = new Peer(authUser._id , {
+        config: {'iceServers': [
+          { url: 'stun:stun.l.google.com:19302' },
+          { url: 'stun:global.stun.twilio.com:3478' },
+        ]} 
+        });
       setPeer(newPeer);
       newPeer.on("open", (id) => {
         console.log("Peer ID:", id);
